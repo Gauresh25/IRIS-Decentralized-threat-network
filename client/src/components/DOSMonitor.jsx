@@ -11,7 +11,7 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-// ABI Import for the DOS Attack Logger Contract
+// ABI for the DOS Attack Logger Contract
 const DosAttackLogger = {
   abi: [
     {
@@ -112,6 +112,45 @@ const DoSMonitor = () => {
   });
   const [selectedTimeRange, setSelectedTimeRange] = useState('24h');
 
+  // Expose a debug function to the window object
+  window.debugContract = async () => {
+    try {
+      if (!window.ethereum) return console.log('No ethereum provider found');
+      
+      console.log('Contract address to check:', '0xe609FDf051E7C3113d6b3246C604971bB384f7D7');
+      
+      const provider = new ethers.BrowserProvider(window.ethereum);
+      console.log('Provider created');
+      
+      const code = await provider.getCode('0xe609FDf051E7C3113d6b3246C604971bB384f7D7');
+      console.log('Code at address:', code);
+      
+      if (code === '0x') {
+        console.log('No contract at this address!');
+        return;
+      }
+      
+      const signer = await provider.getSigner();
+      console.log('Signer obtained:', await signer.getAddress());
+      
+      const dosContract = new ethers.Contract(
+        '0xe609FDf051E7C3113d6b3246C604971bB384f7D7',
+        DosAttackLogger.abi,
+        signer
+      );
+      console.log('Contract instance created');
+      
+      try {
+        const count = await dosContract.attackCount();
+        console.log('Attack count:', count.toString());
+      } catch (error) {
+        console.error('Error calling attackCount:', error);
+      }
+    } catch (error) {
+      console.error('Debug error:', error);
+    }
+  };
+
   // Initialize blockchain connection
   useEffect(() => {
     initializeBlockchain();
@@ -172,51 +211,82 @@ const DoSMonitor = () => {
       
       // Updated for ethers v6
       const provider = new ethers.BrowserProvider(window.ethereum);
-      const network = await provider.getNetwork();
       
-      // Chain ID is now accessed differently
-      const chainId = Number(network.chainId);
-      
-      if (chainId !== 1337) {
-        toast.error(`Please connect to Ganache (Chain ID 1337). Currently on chain ID ${chainId}`);
-        setConnectionStatus('wrong-network');
-        setLoading(false);
-        return;
-      }
-      
-      const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
-      
-      if (!accounts || accounts.length === 0) {
-        toast.error('Please connect your MetaMask account');
-        setConnectionStatus('disconnected');
-        setLoading(false);
-        return;
-      }
-      
-      setAccount(accounts[0]);
-      const signer = await provider.getSigner();
-      
-      // Replace with your deployed contract address after deploying
-      const contractAddress = '0xe609FDf051E7C3113d6b3246C604971bB384f7D7';
-      
-      const dosContract = new ethers.Contract(
-        contractAddress,
-        DosAttackLogger.abi,
-        signer
-      );
-      
-      // Check if connected properly
       try {
-        const count = await dosContract.attackCount();
-        console.log('Connected to DoS Attack Logger, attack count:', count.toString());
-        setContract(dosContract);
-        setConnectionStatus('connected');
+        const network = await provider.getNetwork();
+        
+        // Chain ID is accessed differently in v6
+        const chainId = parseInt(network.chainId);
+        
+        if (chainId !== 1337) {
+          toast.error(`Please connect to Ganache (Chain ID 1337). Currently on chain ID ${chainId}`);
+          setConnectionStatus('wrong-network');
+          setLoading(false);
+          return;
+        }
+        
+        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' });
+        
+        if (!accounts || accounts.length === 0) {
+          toast.error('Please connect your MetaMask account');
+          setConnectionStatus('disconnected');
+          setLoading(false);
+          return;
+        }
+        
+        setAccount(accounts[0]);
+        const signer = await provider.getSigner();
+        
+        // Your deployed contract address
+        const contractAddress = '0x681C51aFCcb411d84f3F5634bf6d0380502eAFEE';
+        
+        const dosContract = new ethers.Contract(
+          contractAddress,
+          DosAttackLogger.abi,
+          signer
+        );
+        
+        // Check if connected properly
+        try {
+          // Add debugging to see contract address
+          console.log('Attempting to connect to contract at:', contractAddress);
+          
+          // First check if there's any code at the address
+          const code = await provider.getCode(contractAddress);
+          console.log('Code at address:', code);
+          
+          if (code === '0x') {
+            console.error('No contract deployed at this address');
+            toast.error('No contract found at the specified address');
+            setConnectionStatus('no-contract');
+            return;
+          }
+          
+          // Try manually calling the function to see raw response
+          const data = dosContract.interface.encodeFunctionData("attackCount");
+          console.log('Encoded function data:', data);
+          
+          const rawResult = await provider.call({
+            to: contractAddress,
+            data: data
+          });
+          console.log('Raw call result:', rawResult);
+          
+          // Now try the regular method call
+          const count = await dosContract.attackCount();
+          console.log('Connected to DoS Attack Logger, attack count:', count.toString());
+          setContract(dosContract);
+          setConnectionStatus('connected');
+        } catch (error) {
+          console.error('Contract connection error:', error);
+          toast.error('Failed to connect to the DoS Attack Logger contract');
+          setConnectionStatus('contract-error');
+        }
       } catch (error) {
-        console.error('Contract connection error:', error);
-        toast.error('Failed to connect to the DoS Attack Logger contract');
-        setConnectionStatus('contract-error');
+        console.error('Network error:', error);
+        toast.error('Failed to connect to the network');
+        setConnectionStatus('network-error');
       }
-      
     } catch (error) {
       console.error('Blockchain initialization error:', error);
       toast.error('Failed to connect to blockchain');
@@ -235,11 +305,12 @@ const DoSMonitor = () => {
       const count = await contract.attackCount();
       const attacksData = [];
       
-      for (let i = 1; i <= count; i++) {
+      for (let i = 1; i <= Number(count); i++) {
         try {
           const attack = await contract.getAttack(i);
           
           // Convert the returned data to a more usable format
+          // Note: In ethers v6, BigInt is used instead of BigNumber
           attacksData.push({
             id: Number(attack[0]),
             sourceIP: attack[1],
@@ -351,6 +422,27 @@ const DoSMonitor = () => {
       attackTypes: attackTypesData,
       timelineData
     });
+  };
+
+  // Update attack status
+  const updateAttackStatus = async (id, newStatus) => {
+    if (!contract) return;
+
+    try {
+      setLoading(true);
+      toast.info('Updating attack status...');
+
+      const tx = await contract.updateAttackStatus(id, newStatus);
+      await tx.wait(); // Wait for transaction to be mined
+
+      toast.success('Attack status updated successfully');
+      await loadAttacks(); // Reload attacks to reflect changes
+    } catch (error) {
+      console.error('Failed to update attack status:', error);
+      toast.error('Error updating attack status');
+    } finally {
+      setLoading(false);
+    }
   };
 
   // Status badge styling
@@ -546,6 +638,7 @@ const DoSMonitor = () => {
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Volume</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Timestamp</th>
                   <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                  <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
                 </tr>
               </thead>
               <tbody className="bg-white divide-y divide-gray-200">
@@ -563,11 +656,31 @@ const DoSMonitor = () => {
                           {attack.status}
                         </span>
                       </td>
+                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                        {attack.status === 'Active' && (
+                          <button 
+                            onClick={() => updateAttackStatus(attack.id, 1)} // 1 = Mitigated
+                            className="text-green-600 hover:text-green-900 mr-2"
+                            disabled={loading}
+                          >
+                            Mitigate
+                          </button>
+                        )}
+                        {attack.status !== 'Closed' && (
+                          <button 
+                            onClick={() => updateAttackStatus(attack.id, 3)} // 3 = Closed
+                            className="text-gray-600 hover:text-gray-900"
+                            disabled={loading}
+                          >
+                            Close
+                          </button>
+                        )}
+                      </td>
                     </tr>
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="7" className="px-6 py-4 text-center text-sm text-gray-500">
+                    <td colSpan="8" className="px-6 py-4 text-center text-sm text-gray-500">
                       No attacks found. Either no attacks have been logged or there's an issue connecting to the blockchain.
                     </td>
                   </tr>
