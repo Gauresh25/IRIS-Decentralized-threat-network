@@ -239,7 +239,7 @@ const DoSMonitor = () => {
         const signer = await provider.getSigner();
         
         // Your deployed contract address
-        const contractAddress = process.env.DOS_ATTACK_LOGGER_ADDRESS || '0x681C51aFCcb411d84f3F5634bf6d0380502eAFEE';
+        const contractAddress = import.meta.env.VITE_DOS_ATTACK_LOGGER_ADDRESS ;
         console.log('Contract address:', contractAddress);
         
         const dosContract = new ethers.Contract(
