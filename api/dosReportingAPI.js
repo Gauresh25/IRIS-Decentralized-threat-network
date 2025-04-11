@@ -4,6 +4,7 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const { ethers } = require('ethers');
 const DosAttackLogger = require('../client/src/contracts/DosAttackLogger.json');
+require('dotenv').config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
@@ -13,8 +14,8 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // FIXED: Private key format - removed 0x prefix for ethers v6
-const PRIVATE_KEY = '0xf534c5c7c60e8d69c785a8f77f4c270f1efdd117d43de42b1b9a1f2545ce0539';
-const CONTRACT_ADDRESS = '0x681C51aFCcb411d84f3F5634bf6d0380502eAFEE';
+const PRIVATE_KEY = process.env.PRIVATE_KEY;
+const CONTRACT_ADDRESS = process.env.DOS_ATTACK_LOGGER_ADDRESS;
 
 // Configure blockchain connection - compatible with ethers v6
 const provider = new ethers.JsonRpcProvider('http://127.0.0.1:7545');

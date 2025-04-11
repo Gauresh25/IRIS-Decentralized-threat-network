@@ -2,7 +2,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import ThreatMonitor from './components/ThreatMonitor';
 import SecurityDashboard from './components/SecurityDashboard';
-import DoSMonitor from './components/DoSMonitor'; // Import the new component
+import DoSMonitor from './components/DOSMonitor'; // Import the new component
 import { Shield, AlertTriangle, BarChart, Activity } from 'lucide-react';
 
 // Layout component to maintain consistent structure across routes

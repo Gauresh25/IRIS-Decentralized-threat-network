@@ -11,6 +11,7 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
+
 // ABI for the DOS Attack Logger Contract
 const DosAttackLogger = {
   abi: [
@@ -238,7 +239,8 @@ const DoSMonitor = () => {
         const signer = await provider.getSigner();
         
         // Your deployed contract address
-        const contractAddress = '0x681C51aFCcb411d84f3F5634bf6d0380502eAFEE';
+        const contractAddress = process.env.DOS_ATTACK_LOGGER_ADDRESS || '0x681C51aFCcb411d84f3F5634bf6d0380502eAFEE';
+        console.log('Contract address:', contractAddress);
         
         const dosContract = new ethers.Contract(
           contractAddress,

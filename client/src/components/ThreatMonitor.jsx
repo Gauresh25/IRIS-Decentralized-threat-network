@@ -135,7 +135,7 @@ const ThreatMonitor = () => {
       const signer = provider.getSigner();
   
       // Get your latest deployed contract address from truffle migrate
-      const contractAddress = '0xCef5B1996ac31bF1D399E85607100c92d9347c49';
+      const contractAddress = process.env.TODO_LIST_ADDRESS;
       
       // Create contract instance with additional verification
       const threatContract = new ethers.Contract(
