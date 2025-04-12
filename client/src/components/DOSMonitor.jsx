@@ -10,90 +10,12 @@ import {
 } from 'lucide-react';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import DosAttackLoggerArtifact from '../contracts/DosAttackLogger.json';
 
 
 // ABI for the DOS Attack Logger Contract
 const DosAttackLogger = {
-  abi: [
-    {
-      "constant": true,
-      "inputs": [],
-      "name": "attackCount",
-      "outputs": [{"name": "", "type": "uint256"}],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [{"name": "", "type": "uint256"}],
-      "name": "attacks",
-      "outputs": [
-        {"name": "id", "type": "uint256"},
-        {"name": "sourceIP", "type": "string"},
-        {"name": "targetService", "type": "string"},
-        {"name": "timestamp", "type": "uint256"},
-        {"name": "attackType", "type": "uint8"},
-        {"name": "trafficVolume", "type": "uint256"},
-        {"name": "duration", "type": "uint256"},
-        {"name": "additionalInfo", "type": "string"},
-        {"name": "status", "type": "uint8"}
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {"name": "_sourceIP", "type": "string"},
-        {"name": "_targetService", "type": "string"},
-        {"name": "_timestamp", "type": "uint256"},
-        {"name": "_attackType", "type": "uint256"},
-        {"name": "_trafficVolume", "type": "uint256"},
-        {"name": "_duration", "type": "uint256"},
-        {"name": "_additionalInfo", "type": "string"}
-      ],
-      "name": "logAttack",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": false,
-      "inputs": [
-        {"name": "_id", "type": "uint256"},
-        {"name": "_newStatus", "type": "uint256"}
-      ],
-      "name": "updateAttackStatus",
-      "outputs": [],
-      "payable": false,
-      "stateMutability": "nonpayable",
-      "type": "function"
-    },
-    {
-      "constant": true,
-      "inputs": [
-        {"name": "_id", "type": "uint256"}
-      ],
-      "name": "getAttack",
-      "outputs": [
-        {"name": "id", "type": "uint256"},
-        {"name": "sourceIP", "type": "string"},
-        {"name": "targetService", "type": "string"},
-        {"name": "timestamp", "type": "uint256"},
-        {"name": "attackType", "type": "uint256"},
-        {"name": "trafficVolume", "type": "uint256"},
-        {"name": "duration", "type": "uint256"},
-        {"name": "additionalInfo", "type": "string"},
-        {"name": "status", "type": "uint256"}
-      ],
-      "payable": false,
-      "stateMutability": "view",
-      "type": "function"
-    }
-  ]
+  abi: DosAttackLoggerArtifact.abi
 };
 
 const DoSMonitor = () => {
