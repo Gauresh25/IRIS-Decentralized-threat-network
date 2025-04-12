@@ -2,7 +2,8 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import ThreatMonitor from './components/ThreatMonitor';
 import SecurityDashboard from './components/SecurityDashboard';
-import DoSMonitor from './components/DOSMonitor'; // Import the new component
+import DoSMonitor from './components/DOSMonitor'; 
+import PhishingMonitor from './components/PhishingMonitor';
 import { Shield, AlertTriangle, BarChart, Activity } from 'lucide-react';
 
 // Layout component to maintain consistent structure across routes
@@ -41,6 +42,13 @@ const Layout = ({ children }) => {
                   <Activity className="h-5 w-5 mr-1" />
                   DoS Monitor
                 </Link>
+                <Link
+                  to="/PhishingMonitor"
+                  className="inline-flex items-center px-1 pt-1 text-gray-900 hover:text-blue-600"
+                >
+                  <Activity className="h-5 w-5 mr-1" />
+                  Phishing Monitor
+                </Link>
               </div>
             </div>
           </div>
@@ -75,6 +83,10 @@ function App() {
             path="/dos-monitor" 
             element={<DoSMonitor />} 
           />
+          {/* Phishing Monitor route */}
+          <Route 
+            path="/PhishingMonitor" 
+            element={<PhishingMonitor/> }/>
         </Routes>
       </Layout>
     </Router>

@@ -11,7 +11,7 @@ import {
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 
-const SimplifiedPhishingLogger = {
+const PhishingAttackLogger = {
   abi: [
     {
       "constant": true,
