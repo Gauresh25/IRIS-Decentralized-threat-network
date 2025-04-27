@@ -1,0 +1,24 @@
+2025-04-27 21:16:12,060 - INFO - DoS Detector initialized
+2025-04-27 21:16:12,060 - INFO - Interface: All interfaces
+2025-04-27 21:16:12,060 - INFO - Threshold: 1000 packets per 10 seconds
+2025-04-27 21:16:12,060 - INFO - IP Blocking: Disabled
+2025-04-27 21:16:12,060 - INFO - API Reporting: Disabled
+2025-04-27 21:16:12,060 - INFO - Starting packet capture...
+2025-04-27 21:17:00,455 - INFO - DoS Detector initialized
+2025-04-27 21:17:00,455 - INFO - Interface: All interfaces
+2025-04-27 21:17:00,455 - INFO - Threshold: 1000 packets per 10 seconds
+2025-04-27 21:17:00,455 - INFO - IP Blocking: Disabled
+2025-04-27 21:17:00,455 - INFO - API Reporting: Disabled
+2025-04-27 21:17:00,463 - INFO - Starting packet capture...
+2025-04-27 21:20:16,992 - INFO - DoS Detector initialized
+2025-04-27 21:20:16,992 - INFO - Interface: All interfaces
+2025-04-27 21:20:16,992 - INFO - Threshold: 1000 packets per 10 seconds
+2025-04-27 21:20:16,992 - INFO - IP Blocking: Enabled
+2025-04-27 21:20:16,992 - INFO - API Reporting: Disabled
+2025-04-27 21:20:17,004 - INFO - Starting packet capture...
+2025-04-27 21:23:01,987 - INFO - DoS Detector initialized
+2025-04-27 21:23:01,987 - INFO - Interface: All interfaces
+2025-04-27 21:23:01,987 - INFO - Threshold: 1000 packets per 10 seconds
+2025-04-27 21:23:01,987 - INFO - IP Blocking: Disabled
+2025-04-27 21:23:01,987 - INFO - API Reporting: Disabled
+2025-04-27 21:23:01,987 - INFO - Starting packet capture...

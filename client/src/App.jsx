@@ -17,7 +17,7 @@ const Layout = ({ children }) => {
               <div className="flex-shrink-0 flex items-center">
                 <Shield className="h-8 w-8 text-blue-600" />
                 <span className="ml-2 text-xl font-bold text-gray-900">
-                  Security Center
+                  IRIS: Intelligence resilience through information sharing
                 </span>
               </div>
               <div className="ml-6 flex space-x-8">
@@ -28,13 +28,7 @@ const Layout = ({ children }) => {
                   <BarChart className="h-5 w-5 mr-1" />
                   Dashboard
                 </Link>
-                <Link
-                  to="/monitor"
-                  className="inline-flex items-center px-1 pt-1 text-gray-900 hover:text-blue-600"
-                >
-                  <AlertTriangle className="h-5 w-5 mr-1" />
-                  Threat Monitor
-                </Link>
+                
                 <Link
                   to="/dos-monitor"
                   className="inline-flex items-center px-1 pt-1 text-gray-900 hover:text-blue-600"

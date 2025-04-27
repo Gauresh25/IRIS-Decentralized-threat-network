@@ -23,7 +23,7 @@ class DosSimulator:
         print(f"Starting {self.attack_type} simulation against {self.target_service}")
         
         # Choose a random source IP for this attack
-        source_ip = random.choice(self.source_ips)
+        source_ip = f"127.0.0.1"
         
         # Generate random traffic volume based on attack type
         traffic_volumes = {
